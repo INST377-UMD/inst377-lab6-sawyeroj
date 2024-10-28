@@ -1,0 +1,81 @@
+<html>
+
+<head>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+    <title>Location</title>
+    <header>
+        <h1>Map of US</h1>
+    </header>
+    <link rel="stylesheet" href="style.css">
+    <!-- <script type="text/javascript">
+        function getRandomInRange(from, to, fixed) {
+            return (Math.random() * (to - from) + from).toFixed(fixed) * 1;
+        }
+        function set_rand_coords() {
+            document.getElementById("c1Lat").innerHTML = getRandomInRange(30, 35, 3);
+            document.getElementById("c1Lon").innerHTML = getRandomInRange(-90, -100, 3);
+            document.getElementById("c2Lat").innerHTML = getRandomInRange(30, 35, 3);
+            document.getElementById("c2Lon").innerHTML = getRandomInRange(-90, -100, 3);
+            document.getElementById("c3Lat").innerHTML = getRandomInRange(30, 35, 3);
+            document.getElementById("c3Lon").innerHTML = getRandomInRange(-90, -100, 3);
+        }
+    </script> -->
+</head>
+
+<body>
+    <div id="map"></div>
+    <h2>Marker 1: Latitude: <item id="c1Lat"></item>, Longitude: <item id="c1Lon"></item>
+    </h2>
+    <h3>Locality: <item id="loc1"></item></h3>
+    <h2>Marker 2: Latitude: <item id="c2Lat"></item>, Longitude: <item id="c2Lon"></item>
+    </h2>
+    <h3>Locality: <item id="loc2"></item></h3>
+    <h2>Marker 3: Latitude: <item id="c3Lat"></item>, Longitude: <item id="c3Lon"></item>
+    </h2>
+    <h3>Locality: <item id="loc3"></item></h3>
+    <script defer>
+        function getRandomInRange(from, to, fixed) {
+            return (Math.random() * (to - from) + from).toFixed(fixed) * 1;
+        }
+        var e1 = document.getElementById("c1Lat").innerHTML = getRandomInRange(30, 35, 3);
+        var e2 = document.getElementById("c1Lon").innerHTML = getRandomInRange(-90, -100, 3);
+        var e3 = document.getElementById("c2Lat").innerHTML = getRandomInRange(30, 35, 3);
+        var e4 = document.getElementById("c2Lon").innerHTML = getRandomInRange(-90, -100, 3);
+        var e5 = document.getElementById("c3Lat").innerHTML = getRandomInRange(30, 35, 3);
+        var e6 = document.getElementById("c3Lon").innerHTML = getRandomInRange(-90, -100, 3);
+
+        var map = L.map('map').setView([38.91, -77.04], 3);
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(map);
+        async function get_loc(latitude, longitude) {
+            try {
+                const data = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`).then((res) => res.json());
+                console.log(data.locality);
+                return data.locality;
+            } catch (err) {
+                console.error(err);
+            }
+        }
+        async function populate_localities() {
+            document.getElementById("loc1").innerHTML = await get_loc(e1, e2);
+            document.getElementById("loc2").innerHTML = await get_loc(e3, e4);
+            document.getElementById("loc3").innerHTML = await get_loc(e5, e6);
+        }
+        populate_localities();
+        var marker1 = new L.marker([e1, e2]);
+        var marker2 = new L.marker([e3, e4]);
+        var marker3 = new L.marker([e5, e6]);
+        marker1.addTo(map);
+        marker2.addTo(map);
+        marker3.addTo(map);
+    </script>
+</body>
+
+</html>
